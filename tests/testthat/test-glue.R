@@ -43,8 +43,8 @@ test_that("build_glue_config_str contains required sections", {
   expect_match(cfg, "\\[sqlfluff\\]")
   expect_match(cfg, "templater = placeholder")
   expect_match(cfg, "param_regex")
-  expect_match(cfg, "col = __GLUE_1__")
-  expect_match(cfg, "tbl = __GLUE_2__")
+  expect_match(cfg, "col = '__GLUE_1__'")
+  expect_match(cfg, "tbl = '__GLUE_2__'")
 })
 
 test_that("build_glue_config_str includes dialect when provided", {
