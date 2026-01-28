@@ -46,5 +46,5 @@ test_that("print method for zero violations", {
 test_that("print method for violations", {
   result <- sqlf_lint(sql = "SeLeCt 1")
   out <- capture.output(print(result))
-  expect_true(any(grepl("Found \\d+ linting violation", out)))
+  expect_true(any(grepl("sqlf_lint_results: \\d+ violation", out)))
 })
