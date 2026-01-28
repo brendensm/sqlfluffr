@@ -8,7 +8,8 @@
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
     assert_sqlfluff_installed()
-    .sqlfluff_env$sqlfluff <- reticulate::import("sqlfluff")
+    # Suppress warnings from reticulate's internal pip/uv handling
+    .sqlfluff_env$sqlfluff <- suppressWarnings(reticulate::import("sqlfluff"))
   }
   .sqlfluff_env$sqlfluff
 }
@@ -17,7 +18,8 @@ get_sqlfluff <- function() {
 get_sqlfluff_core <- function() {
   if (is.null(.sqlfluff_env$core)) {
     assert_sqlfluff_installed()
-    .sqlfluff_env$core <- reticulate::import("sqlfluff.core")
+    # Suppress warnings from reticulate's internal pip/uv handling
+    .sqlfluff_env$core <- suppressWarnings(reticulate::import("sqlfluff.core"))
   }
   .sqlfluff_env$core
 }

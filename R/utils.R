@@ -49,13 +49,41 @@ resolve_config <- function(dialect, rules, exclude_rules, config, glue, sql) {
 
 #' @noRd
 assert_sqlfluff_installed <- function() {
-  if (!reticulate::py_module_available("sqlfluff")) {
+  # Check if Python is already initialized (without triggering initialization)
+  py_initialized <- suppressWarnings(reticulate::py_available(initialize = FALSE))
+
+  if (py_initialized) {
+    # Python already running - just check if sqlfluff is available
+    if (suppressWarnings(reticulate::py_module_available("sqlfluff"))) {
+      return(invisible())
+    }
+  }
+
+  # Either Python not initialized or sqlfluff not installed - need to prompt
+  if (!interactive()) {
     stop(
       "The Python package 'sqlfluff' is not installed.\n",
-      "Install it with: sqlfluffr::install_sqlf()",
+      "Run sqlfluffr interactively to install, or use reticulate::py_require('sqlfluff').",
       call. = FALSE
     )
   }
+
+  # Show prompt BEFORE any Python initialization happens
+  message("The Python package 'sqlfluff' is required.")
+  message("This may download Python and dependencies (~25 MB).")
+
+  answer <- utils::menu(
+    choices = c("Yes", "No"),
+    title = "Would you like to install it?"
+  )
+
+  if (answer != 1L) {
+    stop("sqlfluff installation cancelled.", call. = FALSE)
+  }
+
+  # Register the requirement (actual install happens on first import)
+  suppressWarnings(reticulate::py_require("sqlfluff"))
+  invisible()
 }
 
 #' @noRd
