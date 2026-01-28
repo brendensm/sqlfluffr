@@ -3,9 +3,11 @@
 .onLoad <- function(libname, pkgname) {
   # Initialize Python and import sqlfluff at package load
   # This triggers any reticulate noise once, not on every function call
+  packageStartupMessage("Initializing sqlfluff...")
   sf <- try_import_sqlfluff()
   if (!is.null(sf)) {
     .sqlfluff_env$sqlfluff <- sf
+    packageStartupMessage("Ready.")
   }
 }
 
