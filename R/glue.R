@@ -37,7 +37,7 @@ build_glue_config_str <- function(vars, dialect = NULL, user_config = NULL) {
     "param_regex = \\{[`'\"*.]*(?P<param_name>[\\w_.]+)[`'\"*.]*\\}")
 
   for (i in seq_along(vars)) {
-    lines <- c(lines, paste0(vars[i], " = __GLUE_", i, "__"))
+    lines <- c(lines, paste0(vars[i], " = '__GLUE_", i, "__'"))
   }
 
   paste(lines, collapse = "\n")
