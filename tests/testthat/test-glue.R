@@ -28,6 +28,11 @@ test_that("extract_glue_vars extracts {var.name}", {
   expect_equal(result, "my.col")
 })
 
+test_that("extract_glue_vars extracts {data$col*}", {
+  result <- sqlfluffr:::extract_glue_vars("SELECT {data$values*} FROM t")
+  expect_equal(result, "data$values")
+})
+
 test_that("extract_glue_vars deduplicates", {
   result <- sqlfluffr:::extract_glue_vars("SELECT {col}, {col} FROM t")
   expect_equal(result, "col")
