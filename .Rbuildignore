@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.claude$
+^scratch\.R$
+^test2\.sql$
+^todo\.md$
