@@ -1,15 +1,6 @@
 .sqlfluff_env <- new.env(parent = emptyenv())
 
-.onLoad <- function(libname, pkgname) {
-  # Initialize Python and import sqlfluff at package load
-  # This triggers any reticulate noise once, not on every function call
-  packageStartupMessage("Initializing sqlfluff...")
-  sf <- try_import_sqlfluff()
-  if (!is.null(sf)) {
-    .sqlfluff_env$sqlfluff <- sf
-    packageStartupMessage("Ready.")
-  }
-}
+# Import deferred to first use via get_sqlfluff()
 
 #' @noRd
 quietly <- function(expr) {
@@ -55,7 +46,7 @@ prompt_install <- function() {
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
-    # Try to import - if already installed, this just works
+    message("Starting sqlfluff (one-time per session)...")
     sf <- try_import_sqlfluff()
 
     if (is.null(sf)) {
