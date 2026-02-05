@@ -17,7 +17,7 @@
 #' @export
 sqlf_lint <- function(sql = NULL, file = NULL, dialect = NULL,
                           rules = NULL, exclude_rules = NULL,
-                          config = NULL, glue = FALSE) {
+                          config = NULL, glue = NULL) {
   sql_text <- resolve_sql_input(sql, file)
   sf <- get_sqlfluff()
 

@@ -45,6 +45,77 @@ print.sqlf_config <- function(x, ...) {
   invisible(x)
 }
 
+#' Write a project-level sqlfluff configuration file
+#'
+#' Writes a `.sqlfluff` configuration file that sqlfluff automatically
+#' discovers. Once written, [sqlf_lint()], [sqlf_fix()], and [sqlf_parse()]
+#' will use these settings without needing explicit arguments.
+#'
+#' @param dialect SQL dialect name (e.g. `"ansi"`, `"bigquery"`, `"postgres"`,
+#'   `"teradata"`). See [sqlf_dialects()] for available options.
+#' @param rules Character vector of rule codes to enable.
+#' @param exclude_rules Character vector of rule codes to exclude.
+#' @param max_line_length Maximum allowed line length.
+#' @param glue If `TRUE`, enables [glue::glue_sql()] placeholder handling
+#'   by default for all lint, fix, and parse calls.
+#' @param path File path to write. Defaults to `".sqlfluff"` in the current
+#'   working directory.
+#' @param overwrite If `FALSE` (default), refuses to overwrite an existing
+#'   file. Set to `TRUE` to replace it.
+#' @param ... Additional settings as named arguments. These are added to the
+#'   `[sqlfluff]` section of the configuration.
+#'
+#' @return The file path, invisibly.
+#'
+#' @examples
+#' \dontrun{
+#' # Set up Teradata dialect with glue support for the project
+#' sqlf_config_write(dialect = "teradata", glue = TRUE)
+#'
+#' # Now lint and fix calls use Teradata + glue automatically
+#' sqlf_lint(file = "query.sql")
+#' sqlf_fix(file = "query.sql")
+#' }
+#'
+#' @export
+sqlf_config_write <- function(dialect = NULL, rules = NULL,
+                              exclude_rules = NULL, max_line_length = NULL,
+                              glue = NULL, path = ".sqlfluff",
+                              overwrite = FALSE, ...) {
+  if (file.exists(path) && !isTRUE(overwrite)) {
+    stop("File already exists: ", path,
+         "\nUse overwrite = TRUE to replace it.", call. = FALSE)
+  }
+
+  lines <- "[sqlfluff]"
+  if (!is.null(dialect)) {
+    lines <- c(lines, paste0("dialect = ", dialect))
+  }
+  if (!is.null(rules)) {
+    lines <- c(lines, paste0("rules = ", paste(rules, collapse = ",")))
+  }
+  if (!is.null(exclude_rules)) {
+    lines <- c(lines, paste0("exclude_rules = ",
+                              paste(exclude_rules, collapse = ",")))
+  }
+  if (!is.null(max_line_length)) {
+    lines <- c(lines, paste0("max_line_length = ", max_line_length))
+  }
+
+  extra <- list(...)
+  for (nm in names(extra)) {
+    lines <- c(lines, paste0(nm, " = ", extra[[nm]]))
+  }
+
+  if (isTRUE(glue)) {
+    lines <- c(lines, "", "[sqlfluffr]", "glue = true")
+  }
+
+  writeLines(lines, path)
+  message("Config written to: ", path)
+  invisible(path)
+}
+
 #' @noRd
 build_fluff_config <- function(cfg, glue = FALSE, sql = NULL) {
   core <- get_sqlfluff_core()

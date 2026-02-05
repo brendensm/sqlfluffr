@@ -12,7 +12,7 @@
 #' @return A nested list representing the parse tree.
 #' @export
 sqlf_parse <- function(sql = NULL, file = NULL, dialect = NULL,
-                           config = NULL, glue = FALSE) {
+                           config = NULL, glue = NULL) {
   sql_text <- resolve_sql_input(sql, file)
   sf <- get_sqlfluff()
 

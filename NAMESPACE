@@ -3,6 +3,7 @@
 S3method(print,sqlf_config)
 S3method(print,sqlf_lint_results)
 export(sqlf_config)
+export(sqlf_config_write)
 export(sqlf_dialects)
 export(sqlf_fix)
 export(sqlf_lint)

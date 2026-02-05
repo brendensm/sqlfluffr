@@ -76,7 +76,7 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #' @export
 sqlf_fix <- function(sql = NULL, file = NULL, dialect = NULL,
                          rules = NULL, exclude_rules = NULL,
-                         config = NULL, glue = FALSE, force = FALSE) {
+                         config = NULL, glue = NULL, force = FALSE) {
   sql_text <- resolve_sql_input(sql, file)
   sf <- get_sqlfluff()
 
