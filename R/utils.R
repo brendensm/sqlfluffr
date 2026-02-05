@@ -73,7 +73,7 @@ resolve_config <- function(dialect, rules, exclude_rules, config, glue, sql) {
 
   # If glue mode, build config with placeholder templater
   if (isTRUE(glue)) {
-    cfg <- do.call(sqlf_config, c(
+    cfg <- do.call(new_sqlf_config, c(
       list(dialect = dialect, rules = rules, exclude_rules = exclude_rules,
            max_line_length = max_line_length),
       extra
@@ -83,7 +83,7 @@ resolve_config <- function(dialect, rules, exclude_rules, config, glue, sql) {
 
   # Otherwise build a simple config from arguments
   if (has_settings) {
-    cfg <- do.call(sqlf_config, c(
+    cfg <- do.call(new_sqlf_config, c(
       list(dialect = dialect, rules = rules, exclude_rules = exclude_rules,
            max_line_length = max_line_length),
       extra

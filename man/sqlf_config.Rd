@@ -2,19 +2,22 @@
 % Please edit documentation in R/config.R
 \name{sqlf_config}
 \alias{sqlf_config}
-\title{Create a reusable sqlfluff configuration}
+\title{Write a project-level sqlfluff configuration file}
 \usage{
 sqlf_config(
   dialect = NULL,
   rules = NULL,
   exclude_rules = NULL,
   max_line_length = NULL,
-  config_path = NULL,
+  glue = NULL,
+  path = ".sqlfluff",
+  overwrite = FALSE,
   ...
 )
 }
 \arguments{
-\item{dialect}{SQL dialect name (e.g. `"ansi"`, `"bigquery"`, `"postgres"`).}
+\item{dialect}{SQL dialect name (e.g. `"ansi"`, `"bigquery"`, `"postgres"`,
+`"teradata"`). See [sqlf_dialects()] for available options.}
 
 \item{rules}{Character vector of rule codes to enable.}
 
@@ -22,15 +25,37 @@ sqlf_config(
 
 \item{max_line_length}{Maximum allowed line length.}
 
-\item{config_path}{Path to an existing `.sqlfluff` configuration file.}
+\item{glue}{If `TRUE`, enables [glue::glue_sql()] placeholder handling
+by default for all lint, fix, and parse calls.}
+
+\item{path}{File path to write. Defaults to `".sqlfluff"` in the current
+working directory.}
+
+\item{overwrite}{If `FALSE` (default), refuses to overwrite an existing
+file. Set to `TRUE` to replace it.}
 
 \item{...}{Additional settings as named arguments. These are added to the
 `[sqlfluff]` section of the configuration.}
 }
 \value{
-An object of class `"sqlf_config"`.
+The file path, invisibly.
 }
 \description{
-Builds a configuration object that can be passed to [sqlf_lint()],
-[sqlf_fix()], and [sqlf_parse()].
+Writes a `.sqlfluff` configuration file that sqlfluff automatically
+discovers. Once written, [sqlf_lint()], [sqlf_fix()], and [sqlf_parse()]
+will use these settings without needing explicit arguments.
+}
+\examples{
+\dontrun{
+# Set up Teradata dialect with glue support for the project
+sqlf_config(dialect = "teradata", glue = TRUE)
+
+# Now lint and fix calls use Teradata + glue automatically
+sqlf_lint(file = "query.sql")
+sqlf_fix(file = "query.sql")
+
+# Edit the config file manually in RStudio
+sqlf_config_edit()
+}
+
 }

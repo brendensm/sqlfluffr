@@ -1,19 +1,5 @@
-#' Create a reusable sqlfluff configuration
-#'
-#' Builds a configuration object that can be passed to [sqlf_lint()],
-#' [sqlf_fix()], and [sqlf_parse()].
-#'
-#' @param dialect SQL dialect name (e.g. `"ansi"`, `"bigquery"`, `"postgres"`).
-#' @param rules Character vector of rule codes to enable.
-#' @param exclude_rules Character vector of rule codes to exclude.
-#' @param max_line_length Maximum allowed line length.
-#' @param config_path Path to an existing `.sqlfluff` configuration file.
-#' @param ... Additional settings as named arguments. These are added to the
-#'   `[sqlfluff]` section of the configuration.
-#'
-#' @return An object of class `"sqlf_config"`.
-#' @export
-sqlf_config <- function(dialect = NULL, rules = NULL,
+#' @noRd
+new_sqlf_config <- function(dialect = NULL, rules = NULL,
                             exclude_rules = NULL, max_line_length = NULL,
                             config_path = NULL, ...) {
   cfg <- list(
@@ -25,24 +11,6 @@ sqlf_config <- function(dialect = NULL, rules = NULL,
     extra = list(...)
   )
   structure(cfg, class = "sqlf_config")
-}
-
-#' @export
-print.sqlf_config <- function(x, ...) {
-  cat("<sqlf_config>\n")
-  if (!is.null(x$dialect)) cat("  dialect:", x$dialect, "\n")
-  if (!is.null(x$rules)) cat("  rules:", paste(x$rules, collapse = ", "), "\n")
-  if (!is.null(x$exclude_rules)) {
-    cat("  exclude_rules:", paste(x$exclude_rules, collapse = ", "), "\n")
-  }
-  if (!is.null(x$max_line_length)) {
-    cat("  max_line_length:", x$max_line_length, "\n")
-  }
-  if (!is.null(x$config_path)) cat("  config_path:", x$config_path, "\n")
-  if (length(x$extra) > 0L) {
-    cat("  extra:", paste(names(x$extra), collapse = ", "), "\n")
-  }
-  invisible(x)
 }
 
 #' Write a project-level sqlfluff configuration file
@@ -70,18 +38,21 @@ print.sqlf_config <- function(x, ...) {
 #' @examples
 #' \dontrun{
 #' # Set up Teradata dialect with glue support for the project
-#' sqlf_config_write(dialect = "teradata", glue = TRUE)
+#' sqlf_config(dialect = "teradata", glue = TRUE)
 #'
 #' # Now lint and fix calls use Teradata + glue automatically
 #' sqlf_lint(file = "query.sql")
 #' sqlf_fix(file = "query.sql")
+#'
+#' # Edit the config file manually in RStudio
+#' sqlf_config_edit()
 #' }
 #'
 #' @export
-sqlf_config_write <- function(dialect = NULL, rules = NULL,
-                              exclude_rules = NULL, max_line_length = NULL,
-                              glue = NULL, path = ".sqlfluff",
-                              overwrite = FALSE, ...) {
+sqlf_config <- function(dialect = NULL, rules = NULL,
+                        exclude_rules = NULL, max_line_length = NULL,
+                        glue = NULL, path = ".sqlfluff",
+                        overwrite = FALSE, ...) {
   if (file.exists(path) && !isTRUE(overwrite)) {
     stop("File already exists: ", path,
          "\nUse overwrite = TRUE to replace it.", call. = FALSE)
@@ -114,6 +85,22 @@ sqlf_config_write <- function(dialect = NULL, rules = NULL,
   writeLines(lines, path)
   message("Config written to: ", path)
   invisible(path)
+}
+
+#' Open the sqlfluff configuration file for editing
+#'
+#' Opens the `.sqlfluff` configuration file in the default editor.
+#' In RStudio, this opens the file in the source pane.
+#'
+#' @param path Path to the configuration file. Defaults to `".sqlfluff"`.
+#'
+#' @export
+sqlf_config_edit <- function(path = ".sqlfluff") {
+  if (!file.exists(path)) {
+    stop("No config file found at: ", path,
+         "\nCreate one with sqlf_config().", call. = FALSE)
+  }
+  utils::file.edit(path)
 }
 
 #' @noRd
@@ -150,7 +137,6 @@ build_fluff_config <- function(cfg, glue = FALSE, sql = NULL) {
   }
 
   # Build a config string and use from_string(), which works across
-
   # sqlfluff versions without relying on the from_kwargs() signature.
   lines <- "[sqlfluff]"
   if (!is.null(cfg$dialect)) {
