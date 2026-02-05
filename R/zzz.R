@@ -29,7 +29,7 @@ prompt_install <- function() {
   }
 
   message("The Python package 'sqlfluff' is required.")
-  message("This may download Python and dependencies (~25 MB).")
+  message("This may download Python and dependencies (~50 MB).")
 
   answer <- utils::menu(
     choices = c("Yes", "No"),
@@ -46,11 +46,16 @@ prompt_install <- function() {
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
+    # Prompt before Python initialization triggers any downloads
+    if (!reticulate::py_available(initialize = FALSE)) {
+      prompt_install()
+    }
+
     message("Starting sqlfluff (one-time per session)...")
     sf <- try_import_sqlfluff()
 
     if (is.null(sf)) {
-      # Not installed - prompt and install
+      # Python is there but sqlfluff isn't
       prompt_install()
       sf <- try_import_sqlfluff()
       if (is.null(sf)) {
