@@ -42,3 +42,20 @@ The fixed SQL string (invisibly if the file was overwritten).
 Automatically fixes style and syntax violations in a SQL string or file
 using sqlfluff.
 }
+\section{Common parsing issues}{
+
+sqlfluff cannot fix SQL that fails to parse. When this happens, the
+original SQL is returned unchanged and a warning is issued. Common
+causes include:
+
+\itemize{
+  \item Missing parentheses after IN: use `WHERE x IN (1)` not
+    `WHERE x IN 1`.
+  \item "IS NOT IN" syntax: use `WHERE x NOT IN (...)` instead of
+    `WHERE x IS NOT IN (...)`.
+  \item Glue placeholders without `glue = TRUE`: if your SQL contains
+    `\{var\}` placeholders from [glue::glue_sql()], pass `glue = TRUE`
+    so sqlfluff treats them as template variables rather than syntax errors.
+}
+}
+

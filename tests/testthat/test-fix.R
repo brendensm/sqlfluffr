@@ -55,3 +55,23 @@ test_that("file-based fix with force = TRUE overwrites file", {
   fixed <- readLines(tmp)
   expect_true(length(fixed) > 0L)
 })
+
+test_that("sqlf_fix warns on parse errors when output unchanged", {
+  expect_warning(
+    sqlf_fix(sql = "SELECT * FROM t WHERE x IN 1\n"),
+    "parse error"
+  )
+})
+
+test_that("sqlf_fix glue hint appears when braces present and glue = FALSE", {
+  expect_warning(
+    sqlf_fix(sql = "SELECT {col} FROM t\n", glue = FALSE),
+    "glue = TRUE"
+  )
+})
+
+test_that("sqlf_fix does not warn when fix produces different output", {
+  expect_no_warning(
+    sqlf_fix(sql = "select 1")
+  )
+})

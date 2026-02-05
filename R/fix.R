@@ -1,3 +1,44 @@
+#' @noRd
+check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
+                               config, glue) {
+  sf <- get_sqlfluff()
+  fluff_config <- resolve_config(
+    dialect = dialect, rules = rules, exclude_rules = exclude_rules,
+    config = config, glue = glue, sql = sql_text
+  )
+
+  result <- sf$lint(sql_text, config = fluff_config)
+  cols <- c("start_line_no", "start_line_pos", "code", "description", "name")
+  df <- py_result_to_df(result, cols)
+
+  prs_errors <- df[grepl("^PRS", df$code), , drop = FALSE]
+
+  if (nrow(prs_errors) == 0L) return(invisible(NULL))
+
+  err_lines <- vapply(seq_len(nrow(prs_errors)), function(i) {
+    sprintf("  Line %s, Pos %s [%s]: %s",
+            prs_errors$start_line_no[i],
+            prs_errors$start_line_pos[i],
+            prs_errors$code[i],
+            prs_errors$description[i])
+  }, character(1))
+
+  msg <- paste0(
+    "SQL could not be fixed due to parse error(s):\n",
+    paste(err_lines, collapse = "\n")
+  )
+
+  if (!isTRUE(glue) && grepl("\\{", sql_text)) {
+    msg <- paste0(
+      msg,
+      "\n\nHint: SQL contains '{...}' patterns. ",
+      "If using glue::glue_sql(), try sqlf_fix(..., glue = TRUE)."
+    )
+  }
+
+  warning(msg, call. = FALSE)
+}
+
 #' Fix a SQL query
 #'
 #' Automatically fixes style and syntax violations in a SQL string or file
@@ -16,6 +57,22 @@
 #'   modifying the file.
 #'
 #' @return The fixed SQL string (invisibly if the file was overwritten).
+#'
+#' @section Common parsing issues:
+#' sqlfluff cannot fix SQL that fails to parse. When this happens, the
+#' original SQL is returned unchanged and a warning is issued. Common
+#' causes include:
+#'
+#' \itemize{
+#'   \item Missing parentheses after IN: use `WHERE x IN (1)` not
+#'     `WHERE x IN 1`.
+#'   \item "IS NOT IN" syntax: use `WHERE x NOT IN (...)` instead of
+#'     `WHERE x IS NOT IN (...)`.
+#'   \item Glue placeholders without `glue = TRUE`: if your SQL contains
+#'     `\{var\}` placeholders from [glue::glue_sql()], pass `glue = TRUE`
+#'     so sqlfluff treats them as template variables rather than syntax errors.
+#' }
+#'
 #' @export
 sqlf_fix <- function(sql = NULL, file = NULL, dialect = NULL,
                          rules = NULL, exclude_rules = NULL,
@@ -31,6 +88,10 @@ sqlf_fix <- function(sql = NULL, file = NULL, dialect = NULL,
   result <- sf$fix(sql_text, config = fluff_config)
 
   fixed_sql <- as.character(result)
+
+  if (identical(fixed_sql, sql_text)) {
+    check_parse_errors(sql_text, dialect, rules, exclude_rules, config, glue)
+  }
 
   if (!is.null(file)) {
     if (isTRUE(force)) {
