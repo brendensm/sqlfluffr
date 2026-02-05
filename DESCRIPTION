@@ -1,6 +1,6 @@
 Package: sqlfluffr
 Type: Package
-Title: SQL Linter and Formatter via 'sqlfluff'
+Title: R Wrapper to the SQL Linter and Formatter 'sqlfluff'
 Version: 0.1.0
 Authors@R: c(
     person(
