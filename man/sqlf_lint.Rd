@@ -11,7 +11,7 @@ sqlf_lint(
   rules = NULL,
   exclude_rules = NULL,
   config = NULL,
-  glue = FALSE
+  glue = NULL
 )
 }
 \arguments{

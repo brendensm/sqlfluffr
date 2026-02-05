@@ -4,13 +4,7 @@
 \alias{sqlf_parse}
 \title{Parse a SQL query}
 \usage{
-sqlf_parse(
-  sql = NULL,
-  file = NULL,
-  dialect = NULL,
-  config = NULL,
-  glue = FALSE
-)
+sqlf_parse(sql = NULL, file = NULL, dialect = NULL, config = NULL, glue = NULL)
 }
 \arguments{
 \item{sql}{A SQL string to parse.}

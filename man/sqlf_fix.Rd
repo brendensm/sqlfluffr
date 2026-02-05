@@ -11,7 +11,7 @@ sqlf_fix(
   rules = NULL,
   exclude_rules = NULL,
   config = NULL,
-  glue = FALSE,
+  glue = NULL,
   force = FALSE
 )
 }
