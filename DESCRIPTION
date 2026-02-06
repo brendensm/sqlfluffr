@@ -1,6 +1,6 @@
 Package: sqlfluffr
 Type: Package
-Title: R Wrapper to the SQL Linter and Formatter 'sqlfluff'
+Title: Wrapper to the SQL Linter and Formatter 'sqlfluff'
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -9,14 +9,18 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: Provides an R interface to the Python 'sqlfluff' SQL linter and
-    formatter. Lint, fix, and parse SQL queries with support for multiple
-    dialects. Includes special handling for 'glue::glue_sql' syntax with
-    '{var}' placeholders.
+Description: Provides an R interface to the 'Python' 'sqlfluff' SQL linter and
+    formatter via the 'reticulate' package. Lint, fix, and parse SQL queries
+    with support for multiple dialects. 'Python' and 'sqlfluff' are
+    automatically provisioned on first use with user consent. Includes
+    special handling for 'glue' SQL syntax with '{var}' placeholders.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Depends:
+    R (>= 4.0)
 Imports:
     reticulate
+SystemRequirements: Python (>= 3.0), sqlfluff (https://sqlfluff.com)
 Suggests:
     testthat (>= 3.0.0),
     glue,
