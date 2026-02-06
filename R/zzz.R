@@ -1,7 +1,14 @@
 .sqlfluff_env <- new.env(parent = emptyenv())
 
+#' @noRd
+marker_path <- function() {
+  file.path(tools::R_user_dir("sqlfluffr", "cache"), "installed")
+}
+
 .onLoad <- function(libname, pkgname) {
-  reticulate::py_require("sqlfluff")
+  if (file.exists(marker_path())) {
+    quietly(reticulate::py_require("sqlfluff"))
+  }
 }
 
 #' @noRd
@@ -25,7 +32,7 @@ prompt_install <- function() {
   if (!interactive()) {
     stop(
       "The Python package 'sqlfluff' is not installed.\n",
-      "Run sqlfluffr interactively to install, or use reticulate::py_require('sqlfluff').",
+      "Run sqlfluffr in an interactive session to install.",
       call. = FALSE
     )
   }
@@ -43,16 +50,18 @@ prompt_install <- function() {
   }
 
   quietly(reticulate::py_require("sqlfluff"))
+
+  # Mark as installed so future sessions skip the prompt
+  dir.create(dirname(marker_path()), recursive = TRUE, showWarnings = FALSE)
+  file.create(marker_path())
 }
 
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
-    message("Starting sqlfluff (one-time per session)...")
     sf <- try_import_sqlfluff()
 
     if (is.null(sf)) {
-      # Not installed - prompt and install
       prompt_install()
       sf <- try_import_sqlfluff()
       if (is.null(sf)) {
@@ -68,7 +77,7 @@ get_sqlfluff <- function() {
 #' @noRd
 get_sqlfluff_core <- function() {
   if (is.null(.sqlfluff_env$core)) {
-    get_sqlfluff()  # Ensure sqlfluff is installed first
+    get_sqlfluff()
     .sqlfluff_env$core <- quietly(reticulate::import("sqlfluff.core"))
   }
   .sqlfluff_env$core
