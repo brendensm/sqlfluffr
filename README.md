@@ -8,7 +8,7 @@
 remotes::install_github("brendensm/sqlfluffr")
 ```
 
-Python and sqlfluff are managed via [reticulate](https://rstudio.github.io/reticulate/). On first use, you'll be prompted to install any missing dependencies.
+Python and sqlfluff are managed via [reticulate](https://rstudio.github.io/reticulate/). On first use of a function, you'll be prompted to install any missing dependencies.
 
 ## Basic usage
 
@@ -32,7 +32,11 @@ Auto-fix style issues:
 
 ```r
 sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
-#> [1] "SELECT\n    a,\n    b\nFROM t\nWHERE x = 1\n"
+#> SELECT
+#>     a,
+#>     b
+#> FROM t
+#> WHERE x = 1
 ```
 
 ### Parse
@@ -49,7 +53,7 @@ All functions accept a `file` argument:
 
 ```r
 sqlf_lint(file = "query.sql")
-sqlf_fix(file = "query.sql", force = TRUE)  # overwrites the file
+sqlf_fix(file = "query.sql", overwrite = TRUE)  # overwrites the file
 ```
 
 ## Dialects
