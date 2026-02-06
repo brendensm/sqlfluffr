@@ -1,8 +1,4 @@
-skip_on_cran()
-skip_if_not(
-  reticulate::py_module_available("sqlfluff"),
-  "Python sqlfluff not available"
-)
+skip_if_no_sqlfluff()
 
 test_that("fixing SQL returns a character string", {
   result <- sqlf_fix(sql = "select 1")
