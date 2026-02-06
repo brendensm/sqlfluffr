@@ -52,11 +52,14 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #' @param config A [sqlf_config()] object.
 #' @param glue If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
 #'   variables and preserve them in the fixed output.
-#' @param force If `TRUE` and `file` was provided, overwrite the file with
+#' @param overwrite If `TRUE` and `file` was provided, overwrite the file with
 #'   fixed SQL. If `FALSE` (default), the fixed SQL is returned without
 #'   modifying the file.
+#' @param cat If `TRUE` (the default when `overwrite` is `FALSE`), print the
+#'   fixed SQL to the console with [cat()] for easy copy-paste. The fixed
+#'   string is still returned invisibly.
 #'
-#' @return The fixed SQL string (invisibly if the file was overwritten).
+#' @return The fixed SQL string (invisibly when printed via `cat`).
 #'
 #' @section Common parsing issues:
 #' sqlfluff cannot fix SQL that fails to parse. When this happens, the
@@ -76,7 +79,8 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #' @export
 sqlf_fix <- function(sql = NULL, file = NULL, dialect = NULL,
                          rules = NULL, exclude_rules = NULL,
-                         config = NULL, glue = NULL, force = FALSE) {
+                         config = NULL, glue = NULL,
+                         overwrite = FALSE, cat = !overwrite) {
   sql_text <- resolve_sql_input(sql, file)
   sf <- get_sqlfluff()
 
@@ -94,13 +98,18 @@ sqlf_fix <- function(sql = NULL, file = NULL, dialect = NULL,
   }
 
   if (!is.null(file)) {
-    if (isTRUE(force)) {
+    if (isTRUE(overwrite)) {
       writeLines(fixed_sql, file)
       message("File overwritten: ", file)
       return(invisible(fixed_sql))
     } else {
-      message("File not modified. Use `force = TRUE` to overwrite.")
+      message("File not modified. Use `overwrite = TRUE` to overwrite.")
     }
+  }
+
+  if (isTRUE(cat)) {
+    cat(fixed_sql)
+    return(invisible(fixed_sql))
   }
 
   fixed_sql
