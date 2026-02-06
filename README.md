@@ -1,5 +1,9 @@
 # sqlfluffr
 
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/brendensm/sqlfluffr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brendensm/sqlfluffr/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 **sqlfluffr** is an R wrapper around [SQLFluff](https://github.com/sqlfluff/sqlfluff), the popular SQL linter and formatter. Lint, fix, and parse SQL directly from R with support for multiple dialects and [`glue::glue_sql()`](https://glue.tidyverse.org/reference/glue_sql.html) syntax.
 
 ## Installation

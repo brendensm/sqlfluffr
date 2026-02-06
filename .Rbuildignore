@@ -9,3 +9,4 @@
 ^.sqlfluff$
 ^\.DS_Store$
 ^cran-comments\.md$
+^\.github$
