@@ -1,3 +1,4 @@
+skip_on_cran()
 skip_if_not(
   reticulate::py_module_available("sqlfluff"),
   "Python sqlfluff not available"
@@ -32,24 +33,24 @@ test_that("fixing SQL with glue and dialect does not error", {
   expect_true(nchar(result) > 0L)
 })
 
-test_that("file-based fix with force = FALSE does not modify file", {
+test_that("file-based fix with overwrite = FALSE does not modify file", {
   tmp <- tempfile(fileext = ".sql")
   on.exit(unlink(tmp))
   writeLines("select 1", tmp)
   original <- readLines(tmp)
   expect_message(
-    sqlf_fix(file = tmp, force = FALSE),
+    sqlf_fix(file = tmp, overwrite = FALSE),
     "File not modified"
   )
   expect_equal(readLines(tmp), original)
 })
 
-test_that("file-based fix with force = TRUE overwrites file", {
+test_that("file-based fix with overwrite = TRUE overwrites file", {
   tmp <- tempfile(fileext = ".sql")
   on.exit(unlink(tmp))
   writeLines("select 1", tmp)
   expect_message(
-    sqlf_fix(file = tmp, force = TRUE),
+    sqlf_fix(file = tmp, overwrite = TRUE),
     "File overwritten"
   )
   fixed <- readLines(tmp)
