@@ -8,7 +8,11 @@
 remotes::install_github("brendensm/sqlfluffr")
 ```
 
-Python and sqlfluff are managed via [reticulate](https://rstudio.github.io/reticulate/). On first use, you'll be prompted to install any missing dependencies.
+On first use, you'll be prompted to install Python and sqlfluff (~50 MB). You can also install manually:
+
+```r
+sqlf_install()
+```
 
 ## Basic usage
 
