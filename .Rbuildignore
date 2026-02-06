@@ -7,3 +7,4 @@
 ^todo\.md$
 ^t1\.sql$
 ^.sqlfluff$
+^\.DS_Store$
