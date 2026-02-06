@@ -17,6 +17,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Requires Python package 'sqlfluff'
 #' sqlf_lint(sql = "SELECT  a,b from t where x=1\n")
 #' sqlf_lint(file = "query.sql")
 #' sqlf_lint(sql = "SELECT TOP 10 * FROM t\n", dialect = "tsql")

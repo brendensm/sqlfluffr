@@ -6,6 +6,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Requires Python package 'sqlfluff'
 #' sqlf_dialects()
 #' }
 #'
@@ -24,6 +25,7 @@ sqlf_dialects <- function() {
 #'
 #' @examples
 #' \dontrun{
+#' # Requires Python package 'sqlfluff'
 #' sqlf_rules()
 #' }
 #'

@@ -66,6 +66,7 @@ causes include:
 
 \examples{
 \dontrun{
+# Requires Python package 'sqlfluff'
 sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
 sqlf_fix(file = "query.sql", overwrite = TRUE)
 }

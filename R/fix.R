@@ -63,6 +63,7 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #'
 #' @examples
 #' \dontrun{
+#' # Requires Python package 'sqlfluff'
 #' sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
 #' sqlf_fix(file = "query.sql", overwrite = TRUE)
 #' }

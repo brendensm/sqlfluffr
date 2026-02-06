@@ -26,6 +26,7 @@ Parses a SQL string or file into a syntax tree using sqlfluff.
 }
 \examples{
 \dontrun{
+# Requires Python package 'sqlfluff'
 sqlf_parse(sql = "SELECT 1\n")
 }
 

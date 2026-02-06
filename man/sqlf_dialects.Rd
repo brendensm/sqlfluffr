@@ -14,6 +14,7 @@ Returns the dialects supported by the installed version of sqlfluff.
 }
 \examples{
 \dontrun{
+# Requires Python package 'sqlfluff'
 sqlf_dialects()
 }
 

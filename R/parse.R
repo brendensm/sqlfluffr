@@ -13,6 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Requires Python package 'sqlfluff'
 #' sqlf_parse(sql = "SELECT 1\n")
 #' }
 #'
