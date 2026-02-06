@@ -12,3 +12,9 @@ A data.frame with columns `code` and `description`.
 \description{
 Returns the rules available in the installed version of sqlfluff.
 }
+\examples{
+\dontrun{
+sqlf_rules()
+}
+
+}

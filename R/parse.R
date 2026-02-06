@@ -10,6 +10,12 @@
 #'   variables before parsing.
 #'
 #' @return A nested list representing the parse tree.
+#'
+#' @examples
+#' \dontrun{
+#' sqlf_parse(sql = "SELECT 1\n")
+#' }
+#'
 #' @export
 sqlf_parse <- function(sql = NULL, file = NULL, dialect = NULL,
                            config = NULL, glue = NULL) {

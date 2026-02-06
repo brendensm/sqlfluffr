@@ -38,3 +38,11 @@ A data.frame of class `"sqlf_lint_results"` with columns
 \description{
 Checks a SQL string or file for style and syntax violations using sqlfluff.
 }
+\examples{
+\dontrun{
+sqlf_lint(sql = "SELECT  a,b from t where x=1\n")
+sqlf_lint(file = "query.sql")
+sqlf_lint(sql = "SELECT TOP 10 * FROM t\n", dialect = "tsql")
+}
+
+}

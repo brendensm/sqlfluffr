@@ -12,7 +12,8 @@ sqlf_fix(
   exclude_rules = NULL,
   config = NULL,
   glue = NULL,
-  force = FALSE
+  overwrite = FALSE,
+  cat = !overwrite
 )
 }
 \arguments{
@@ -31,12 +32,16 @@ sqlf_fix(
 \item{glue}{If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
 variables and preserve them in the fixed output.}
 
-\item{force}{If `TRUE` and `file` was provided, overwrite the file with
+\item{overwrite}{If `TRUE` and `file` was provided, overwrite the file with
 fixed SQL. If `FALSE` (default), the fixed SQL is returned without
 modifying the file.}
+
+\item{cat}{If `TRUE` (the default when `overwrite` is `FALSE`), print the
+fixed SQL to the console with [cat()] for easy copy-paste. The fixed
+string is still returned invisibly.}
 }
 \value{
-The fixed SQL string (invisibly if the file was overwritten).
+The fixed SQL string (invisibly when printed via `cat`).
 }
 \description{
 Automatically fixes style and syntax violations in a SQL string or file
@@ -59,3 +64,10 @@ causes include:
 }
 }
 
+\examples{
+\dontrun{
+sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
+sqlf_fix(file = "query.sql", overwrite = TRUE)
+}
+
+}

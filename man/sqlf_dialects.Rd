@@ -12,3 +12,9 @@ A data.frame with columns `label`, `name`, and `inherits_from`.
 \description{
 Returns the dialects supported by the installed version of sqlfluff.
 }
+\examples{
+\dontrun{
+sqlf_dialects()
+}
+
+}

@@ -61,6 +61,12 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #'
 #' @return The fixed SQL string (invisibly when printed via `cat`).
 #'
+#' @examples
+#' \dontrun{
+#' sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
+#' sqlf_fix(file = "query.sql", overwrite = TRUE)
+#' }
+#'
 #' @section Common parsing issues:
 #' sqlfluff cannot fix SQL that fails to parse. When this happens, the
 #' original SQL is returned unchanged and a warning is issued. Common

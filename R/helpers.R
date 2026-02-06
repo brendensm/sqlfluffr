@@ -3,6 +3,12 @@
 #' Returns the dialects supported by the installed version of sqlfluff.
 #'
 #' @return A data.frame with columns `label`, `name`, and `inherits_from`.
+#'
+#' @examples
+#' \dontrun{
+#' sqlf_dialects()
+#' }
+#'
 #' @export
 sqlf_dialects <- function() {
   sf <- get_sqlfluff()
@@ -15,6 +21,12 @@ sqlf_dialects <- function() {
 #' Returns the rules available in the installed version of sqlfluff.
 #'
 #' @return A data.frame with columns `code` and `description`.
+#'
+#' @examples
+#' \dontrun{
+#' sqlf_rules()
+#' }
+#'
 #' @export
 sqlf_rules <- function() {
   sf <- get_sqlfluff()

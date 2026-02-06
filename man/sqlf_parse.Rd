@@ -24,3 +24,9 @@ A nested list representing the parse tree.
 \description{
 Parses a SQL string or file into a syntax tree using sqlfluff.
 }
+\examples{
+\dontrun{
+sqlf_parse(sql = "SELECT 1\n")
+}
+
+}

@@ -14,6 +14,14 @@
 #' @return A data.frame of class `"sqlf_lint_results"` with columns
 #'   `line_no`, `line_pos`, `code`, `description`, and `name`.
 #'   Returns a zero-row data.frame if there are no violations.
+#'
+#' @examples
+#' \dontrun{
+#' sqlf_lint(sql = "SELECT  a,b from t where x=1\n")
+#' sqlf_lint(file = "query.sql")
+#' sqlf_lint(sql = "SELECT TOP 10 * FROM t\n", dialect = "tsql")
+#' }
+#'
 #' @export
 sqlf_lint <- function(sql = NULL, file = NULL, dialect = NULL,
                           rules = NULL, exclude_rules = NULL,
