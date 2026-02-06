@@ -59,17 +59,12 @@ prompt_install <- function() {
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
-    sf <- try_import_sqlfluff()
-
-    if (is.null(sf)) {
+    # Prompt BEFORE touching Python if sqlfluff hasn't been set up yet
+    if (!file.exists(marker_path())) {
       prompt_install()
-      sf <- try_import_sqlfluff()
-      if (is.null(sf)) {
-        stop("Failed to import sqlfluff after installation.", call. = FALSE)
-      }
     }
 
-    .sqlfluff_env$sqlfluff <- sf
+    .sqlfluff_env$sqlfluff <- quietly(reticulate::import("sqlfluff"))
   }
   .sqlfluff_env$sqlfluff
 }
