@@ -100,7 +100,8 @@ sqlf_config_edit <- function(path = ".sqlfluff") {
     stop("No config file found at: ", path,
          "\nCreate one with sqlf_config().", call. = FALSE)
   }
-  if (rstudioapi::isAvailable()) {
+  if (requireNamespace("rstudioapi", quietly = TRUE) &&
+      rstudioapi::isAvailable()) {
     rstudioapi::navigateToFile(path)
   } else {
     utils::file.edit(path)
