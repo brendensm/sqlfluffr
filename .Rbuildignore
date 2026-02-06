@@ -5,3 +5,5 @@
 ^scratch\.R$
 ^test2\.sql$
 ^todo\.md$
+^t1\.sql$
+^.sqlfluff$
