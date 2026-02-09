@@ -6,7 +6,7 @@ Authors@R: c(
     person(
       "Brenden", "Smith",
       email = "brendensmithmi@gmail.com",
-      role = c("aut", "cre")
+      role = c("aut", "cre", "cph")
     )
   )
 Description: Provides an R interface to the 'Python' 'sqlfluff' SQL linter and
