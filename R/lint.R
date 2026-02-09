@@ -11,7 +11,7 @@
 #' @param glue If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
 #'   variables and use the placeholder templater so linting works correctly.
 #'
-#' @return A data.frame of class `"sqlf_lint_results"` with columns
+#' @returns A data.frame of class `"sqlf_lint_results"` with columns
 #'   `line_no`, `line_pos`, `code`, `description`, and `name`.
 #'   Returns a zero-row data.frame if there are no violations.
 #'

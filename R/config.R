@@ -33,7 +33,7 @@ new_sqlf_config <- function(dialect = NULL, rules = NULL,
 #' @param ... Additional settings as named arguments. These are added to the
 #'   `[sqlfluff]` section of the configuration.
 #'
-#' @return The file path, invisibly.
+#' @returns The file path, invisibly.
 #'
 #' @examples
 #' \dontrun{

@@ -9,7 +9,7 @@
 #' @param glue If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
 #'   variables before parsing.
 #'
-#' @return A nested list representing the parse tree.
+#' @returns A nested list representing the parse tree.
 #'
 #' @examples
 #' \dontrun{

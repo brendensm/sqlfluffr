@@ -59,7 +59,7 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #'   fixed SQL to the console with [cat()] for easy copy-paste. The fixed
 #'   string is still returned invisibly.
 #'
-#' @return The fixed SQL string (invisibly when printed via `cat`).
+#' @returns The fixed SQL string (invisibly when printed via `cat`).
 #'
 #' @examples
 #' \dontrun{

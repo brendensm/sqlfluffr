@@ -2,7 +2,7 @@
 #'
 #' Returns the dialects supported by the installed version of sqlfluff.
 #'
-#' @return A data.frame with columns `label`, `name`, and `inherits_from`.
+#' @returns A data.frame with columns `label`, `name`, and `inherits_from`.
 #'
 #' @examples
 #' \dontrun{
@@ -21,7 +21,7 @@ sqlf_dialects <- function() {
 #'
 #' Returns the rules available in the installed version of sqlfluff.
 #'
-#' @return A data.frame with columns `code` and `description`.
+#' @returns A data.frame with columns `code` and `description`.
 #'
 #' @examples
 #' \dontrun{
