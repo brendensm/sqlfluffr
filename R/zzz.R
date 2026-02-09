@@ -48,6 +48,31 @@ prompt_install <- function() {
   file.create(marker_path())
 }
 
+#' Reset sqlfluffr setup
+#'
+#' Removes the cached marker file so that the next call to any sqlfluffr
+#' function will re-prompt for Python and sqlfluff installation. Use this
+#' if your Python environment has changed or something is not working.
+#'
+#' @returns Invisible `NULL`.
+#'
+#' @examples
+#' \dontrun{
+#' sqlf_reset()
+#' }
+#'
+#' @export
+sqlf_reset <- function() {
+  mp <- marker_path()
+  if (file.exists(mp)) {
+    unlink(mp)
+    message("sqlfluffr setup has been reset. You will be prompted to install on next use.")
+  } else {
+    message("Nothing to reset.")
+  }
+  invisible(NULL)
+}
+
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
