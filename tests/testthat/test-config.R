@@ -1,7 +1,5 @@
 test_that("sqlf_config writes a config file", {
-  path <- tempfile(fileext = ".sqlfluff")
-  on.exit(unlink(path))
-
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
   result <- sqlf_config(dialect = "postgres", path = path)
   expect_equal(result, path)
   expect_true(file.exists(path))
@@ -12,9 +10,7 @@ test_that("sqlf_config writes a config file", {
 })
 
 test_that("sqlf_config writes all settings", {
-  path <- tempfile(fileext = ".sqlfluff")
-  on.exit(unlink(path))
-
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
   sqlf_config(
     dialect = "bigquery",
     rules = c("LT01", "LT02"),
@@ -31,9 +27,7 @@ test_that("sqlf_config writes all settings", {
 })
 
 test_that("sqlf_config writes glue setting", {
-  path <- tempfile(fileext = ".sqlfluff")
-  on.exit(unlink(path))
-
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
   sqlf_config(dialect = "ansi", glue = TRUE, path = path)
 
   content <- readLines(path)
@@ -42,9 +36,7 @@ test_that("sqlf_config writes glue setting", {
 })
 
 test_that("sqlf_config writes extra settings", {
-  path <- tempfile(fileext = ".sqlfluff")
-  on.exit(unlink(path))
-
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
   sqlf_config(dialect = "ansi", indent_unit = "space", path = path)
 
   content <- readLines(path)
@@ -52,18 +44,14 @@ test_that("sqlf_config writes extra settings", {
 })
 
 test_that("sqlf_config refuses to overwrite by default", {
-  path <- tempfile(fileext = ".sqlfluff")
-  on.exit(unlink(path))
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
   writeLines("existing", path)
-
   expect_error(sqlf_config(dialect = "ansi", path = path), "already exists")
 })
 
 test_that("sqlf_config overwrites when asked", {
-  path <- tempfile(fileext = ".sqlfluff")
-  on.exit(unlink(path))
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
   writeLines("existing", path)
-
   sqlf_config(dialect = "ansi", path = path, overwrite = TRUE)
   content <- readLines(path)
   expect_true("dialect = ansi" %in% content)
@@ -71,6 +59,22 @@ test_that("sqlf_config overwrites when asked", {
 
 test_that("sqlf_config_edit errors when no config exists", {
   expect_error(sqlf_config_edit(path = tempfile()), "No config file found")
+})
+
+test_that("sqlf_config_edit opens file in editor", {
+  path <- withr::local_tempfile(fileext = ".sqlfluff")
+  writeLines("[sqlfluff]", path)
+
+  opened <- NULL
+  local_mocked_bindings(
+    isAvailable = function() TRUE,
+    navigateToFile = function(p) opened <<- p,
+    .package = "rstudioapi"
+  )
+
+  result <- sqlf_config_edit(path = path)
+  expect_equal(opened, path)
+  expect_equal(result, path)
 })
 
 test_that("new_sqlf_config returns correct S3 class", {
