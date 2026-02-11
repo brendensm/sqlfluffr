@@ -10,6 +10,9 @@
 #' @param config A [sqlf_config()] object.
 #' @param glue If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
 #'   variables and use the placeholder templater so linting works correctly.
+#'   `NULL` (the default) reads the `glue` setting from the project `.sqlfluff`
+#'   config file; `FALSE` explicitly disables glue handling regardless of
+#'   project config.
 #'
 #' @returns A data.frame of class `"sqlf_lint_results"` with columns
 #'   `line_no`, `line_pos`, `code`, `description`, and `name`.

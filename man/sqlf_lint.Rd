@@ -28,7 +28,10 @@ sqlf_lint(
 \item{config}{A [sqlf_config()] object.}
 
 \item{glue}{If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
-variables and use the placeholder templater so linting works correctly.}
+variables and use the placeholder templater so linting works correctly.
+`NULL` (the default) reads the `glue` setting from the project `.sqlfluff`
+config file; `FALSE` explicitly disables glue handling regardless of
+project config.}
 }
 \value{
 A data.frame of class `"sqlf_lint_results"` with columns

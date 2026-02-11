@@ -7,7 +7,9 @@
 #' @param dialect SQL dialect (e.g. `"ansi"`, `"bigquery"`, `"postgres"`).
 #' @param config A [sqlf_config()] object.
 #' @param glue If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
-#'   variables before parsing.
+#'   variables before parsing. `NULL` (the default) reads the `glue` setting
+#'   from the project `.sqlfluff` config file; `FALSE` explicitly disables
+#'   glue handling regardless of project config.
 #'
 #' @returns A nested list representing the parse tree.
 #'

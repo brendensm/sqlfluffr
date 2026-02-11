@@ -30,7 +30,9 @@ sqlf_fix(
 \item{config}{A [sqlf_config()] object.}
 
 \item{glue}{If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
-variables and preserve them in the fixed output.}
+variables and preserve them in the fixed output. `NULL` (the default)
+reads the `glue` setting from the project `.sqlfluff` config file;
+`FALSE` explicitly disables glue handling regardless of project config.}
 
 \item{overwrite}{If `TRUE` and `file` was provided, overwrite the file with
 fixed SQL. If `FALSE` (default), the fixed SQL is returned without

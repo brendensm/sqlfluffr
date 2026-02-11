@@ -1,11 +1,6 @@
 #' @noRd
-check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
-                               config, glue) {
+check_parse_errors <- function(sql_text, fluff_config, glue) {
   sf <- get_sqlfluff()
-  fluff_config <- resolve_config(
-    dialect = dialect, rules = rules, exclude_rules = exclude_rules,
-    config = config, glue = glue, sql = sql_text
-  )
 
   result <- sf$lint(sql_text, config = fluff_config)
   cols <- c("start_line_no", "start_line_pos", "code", "description", "name")
@@ -51,7 +46,9 @@ check_parse_errors <- function(sql_text, dialect, rules, exclude_rules,
 #' @param exclude_rules Character vector of rule codes to skip.
 #' @param config A [sqlf_config()] object.
 #' @param glue If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
-#'   variables and preserve them in the fixed output.
+#'   variables and preserve them in the fixed output. `NULL` (the default)
+#'   reads the `glue` setting from the project `.sqlfluff` config file;
+#'   `FALSE` explicitly disables glue handling regardless of project config.
 #' @param overwrite If `TRUE` and `file` was provided, overwrite the file with
 #'   fixed SQL. If `FALSE` (default), the fixed SQL is returned without
 #'   modifying the file.
@@ -97,17 +94,17 @@ sqlf_fix <- function(sql = NULL, file = NULL, dialect = NULL,
   fixed_sql <- as.character(result)
 
   if (identical(fixed_sql, sql_text)) {
-    check_parse_errors(sql_text, dialect, rules, exclude_rules, config, glue)
+    check_parse_errors(sql_text, fluff_config, glue)
   }
 
   if (!is.null(file)) {
     if (isTRUE(overwrite)) {
       writeLines(fixed_sql, file)
       message("File overwritten: ", file)
-      return(invisible(fixed_sql))
     } else {
       message("File not modified. Use `overwrite = TRUE` to overwrite.")
     }
+    return(invisible(fixed_sql))
   }
 
   if (isTRUE(cat)) {

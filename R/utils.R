@@ -1,5 +1,4 @@
 #' @noRd
-#' @importFrom stats setNames
 resolve_sql_input <- function(sql, file) {
   if (!is.null(sql) && !is.null(file)) {
     stop("Provide either `sql` or `file`, not both.", call. = FALSE)
@@ -22,11 +21,12 @@ resolve_sql_input <- function(sql, file) {
 #' Read settings from the [sqlfluff] and [sqlfluffr] sections of a config file.
 #' @noRd
 read_project_config <- function(path = ".sqlfluff") {
-  if (!file.exists(path)) return(list())
+  if (!file.exists(path)) return(list(sqlfluff = list(), sqlfluffr = list()))
 
   lines <- readLines(path, warn = FALSE)
   current_section <- ""
-  settings <- list()
+  sqlfluff_settings <- list()
+  sqlfluffr_settings <- list()
 
   for (line in lines) {
     line <- trimws(line)
@@ -35,19 +35,45 @@ read_project_config <- function(path = ".sqlfluff") {
       current_section <- line
       next
     }
-    if (current_section %in% c("[sqlfluff]", "[sqlfluffr]") && grepl("=", line)) {
+    if (grepl("=", line)) {
       parts <- strsplit(line, "=", fixed = TRUE)[[1]]
       key <- trimws(parts[1])
       value <- trimws(paste(parts[-1], collapse = "="))
-      settings[[key]] <- value
+      if (current_section == "[sqlfluff]") {
+        sqlfluff_settings[[key]] <- value
+      } else if (current_section == "[sqlfluffr]") {
+        sqlfluffr_settings[[key]] <- value
+      }
     }
   }
 
-  settings
+  list(sqlfluff = sqlfluff_settings, sqlfluffr = sqlfluffr_settings)
+}
+
+#' @noRd
+check_scalar_string <- function(x, name) {
+  if (is.null(x)) return(invisible(NULL))
+  if (!is.character(x) || length(x) != 1L) {
+    stop(sprintf("`%s` must be a single string or NULL.", name), call. = FALSE)
+  }
+  invisible(NULL)
+}
+
+#' @noRd
+check_character_or_null <- function(x, name) {
+  if (is.null(x)) return(invisible(NULL))
+  if (!is.character(x)) {
+    stop(sprintf("`%s` must be a character vector or NULL.", name), call. = FALSE)
+  }
+  invisible(NULL)
 }
 
 #' @noRd
 resolve_config <- function(dialect, rules, exclude_rules, config, glue, sql) {
+  check_scalar_string(dialect, "dialect")
+  check_character_or_null(rules, "rules")
+  check_character_or_null(exclude_rules, "exclude_rules")
+
   # If a sqlf_config object is supplied, use it
   if (!is.null(config)) {
     if (!inherits(config, "sqlf_config")) {
@@ -58,15 +84,18 @@ resolve_config <- function(dialect, rules, exclude_rules, config, glue, sql) {
 
   # Fill in NULLs from project .sqlfluff file if it exists
   project <- read_project_config()
-  if (is.null(dialect)) dialect <- project[["dialect"]]
-  if (is.null(rules)) rules <- project[["rules"]]
-  if (is.null(exclude_rules)) exclude_rules <- project[["exclude_rules"]]
-  if (is.null(glue)) glue <- identical(project[["glue"]], "true")
-  max_line_length <- project[["max_line_length"]]
+  sf_cfg <- project$sqlfluff
+  sfr_cfg <- project$sqlfluffr
+
+  if (is.null(dialect)) dialect <- sf_cfg[["dialect"]]
+  if (is.null(rules)) rules <- sf_cfg[["rules"]]
+  if (is.null(exclude_rules)) exclude_rules <- sf_cfg[["exclude_rules"]]
+  if (is.null(glue)) glue <- identical(sfr_cfg[["glue"]], "true")
+  max_line_length <- sf_cfg[["max_line_length"]]
 
   # Collect any extra project settings beyond the known keys
   known_keys <- c("dialect", "rules", "exclude_rules", "max_line_length")
-  extra <- project[setdiff(names(project), known_keys)]
+  extra <- sf_cfg[setdiff(names(sf_cfg), known_keys)]
 
   has_settings <- !is.null(dialect) || !is.null(rules) ||
     !is.null(exclude_rules) || !is.null(max_line_length) || length(extra) > 0L
@@ -97,22 +126,17 @@ resolve_config <- function(dialect, rules, exclude_rules, config, glue, sql) {
 #' @noRd
 py_result_to_df <- function(result, columns) {
   if (length(result) == 0L) {
-    return(as.data.frame(
-      setNames(
-        replicate(length(columns), character(0), simplify = FALSE),
-        columns
-      ),
-      stringsAsFactors = FALSE
-    ))
+    empty <- replicate(length(columns), character(0), simplify = FALSE)
+    names(empty) <- columns
+    return(as.data.frame(empty, stringsAsFactors = FALSE))
   }
 
-  rows <- lapply(result, function(item) {
-    vals <- lapply(columns, function(col) {
+  cols <- lapply(columns, function(col) {
+    vapply(result, function(item) {
       v <- item[[col]]
-      if (is.null(v)) NA else v
-    })
-    setNames(vals, columns)
+      if (is.null(v)) NA_character_ else as.character(v)
+    }, character(1))
   })
-
-  do.call(rbind.data.frame, c(rows, list(stringsAsFactors = FALSE)))
+  names(cols) <- columns
+  as.data.frame(cols, stringsAsFactors = FALSE)
 }

@@ -13,6 +13,29 @@ new_sqlf_config <- function(dialect = NULL, rules = NULL,
   structure(cfg, class = "sqlf_config")
 }
 
+#' Convert a sqlf_config object to INI-style lines for the [sqlfluff] section.
+#' @noRd
+config_to_lines <- function(cfg) {
+  lines <- "[sqlfluff]"
+  if (!is.null(cfg$dialect)) {
+    lines <- c(lines, paste0("dialect = ", cfg$dialect))
+  }
+  if (!is.null(cfg$rules)) {
+    lines <- c(lines, paste0("rules = ", paste(cfg$rules, collapse = ",")))
+  }
+  if (!is.null(cfg$exclude_rules)) {
+    lines <- c(lines, paste0("exclude_rules = ",
+                              paste(cfg$exclude_rules, collapse = ",")))
+  }
+  if (!is.null(cfg$max_line_length)) {
+    lines <- c(lines, paste0("max_line_length = ", cfg$max_line_length))
+  }
+  for (nm in names(cfg$extra)) {
+    lines <- c(lines, paste0(nm, " = ", cfg$extra[[nm]]))
+  }
+  lines
+}
+
 #' Write a project-level sqlfluff configuration file
 #'
 #' Writes a `.sqlfluff` configuration file that sqlfluff automatically
@@ -46,30 +69,23 @@ sqlf_config <- function(dialect = NULL, rules = NULL,
                         exclude_rules = NULL, max_line_length = NULL,
                         glue = NULL, path = ".sqlfluff",
                         overwrite = FALSE, ...) {
+  if (!is.null(max_line_length)) {
+    if (!is.numeric(max_line_length) || length(max_line_length) != 1L ||
+        is.na(max_line_length) || max_line_length < 1) {
+      stop("`max_line_length` must be a positive number.", call. = FALSE)
+    }
+  }
+
   if (file.exists(path) && !isTRUE(overwrite)) {
     stop("File already exists: ", path,
          "\nUse overwrite = TRUE to replace it.", call. = FALSE)
   }
 
-  lines <- "[sqlfluff]"
-  if (!is.null(dialect)) {
-    lines <- c(lines, paste0("dialect = ", dialect))
-  }
-  if (!is.null(rules)) {
-    lines <- c(lines, paste0("rules = ", paste(rules, collapse = ",")))
-  }
-  if (!is.null(exclude_rules)) {
-    lines <- c(lines, paste0("exclude_rules = ",
-                              paste(exclude_rules, collapse = ",")))
-  }
-  if (!is.null(max_line_length)) {
-    lines <- c(lines, paste0("max_line_length = ", max_line_length))
-  }
-
-  extra <- list(...)
-  for (nm in names(extra)) {
-    lines <- c(lines, paste0(nm, " = ", extra[[nm]]))
-  }
+  cfg <- new_sqlf_config(
+    dialect = dialect, rules = rules, exclude_rules = exclude_rules,
+    max_line_length = max_line_length, ...
+  )
+  lines <- config_to_lines(cfg)
 
   if (isTRUE(glue)) {
     lines <- c(lines, "", "[sqlfluffr]", "glue = true")
@@ -137,25 +153,8 @@ build_fluff_config <- function(cfg, glue = FALSE, sql = NULL) {
     return(core$FluffConfig$from_string(config_str))
   }
 
-  # Build a config string and use from_string(), which works across
-  # sqlfluff versions without relying on the from_kwargs() signature.
-  lines <- "[sqlfluff]"
-  if (!is.null(cfg$dialect)) {
-    lines <- c(lines, paste0("dialect = ", cfg$dialect))
-  }
-  if (!is.null(cfg$rules)) {
-    lines <- c(lines, paste0("rules = ", paste(cfg$rules, collapse = ",")))
-  }
-  if (!is.null(cfg$exclude_rules)) {
-    lines <- c(lines, paste0("exclude_rules = ",
-                              paste(cfg$exclude_rules, collapse = ",")))
-  }
-  if (!is.null(cfg$max_line_length)) {
-    lines <- c(lines, paste0("max_line_length = ", cfg$max_line_length))
-  }
-  for (nm in names(cfg$extra)) {
-    lines <- c(lines, paste0(nm, " = ", cfg$extra[[nm]]))
-  }
+  # Build a config string from the helper
+  lines <- config_to_lines(cfg)
 
   if (length(lines) > 1L) {
     config_str <- paste(lines, collapse = "\n")

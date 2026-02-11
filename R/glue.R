@@ -17,7 +17,6 @@ build_glue_config_str <- function(vars, dialect = NULL, user_config = NULL) {
   lines <- c(lines, "[sqlfluff]")
   lines <- c(lines, "templater = placeholder")
 
-
   if (!is.null(dialect)) {
     lines <- c(lines, paste0("dialect = ", dialect))
   }

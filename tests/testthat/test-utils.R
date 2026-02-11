@@ -46,7 +46,7 @@ test_that("py_result_to_df converts list-of-lists properly", {
   result <- sqlfluffr:::py_result_to_df(input, c("a", "b"))
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 2L)
-  expect_equal(result$a, c(1, 2))
+  expect_equal(result$a, c("1", "2"))
   expect_equal(result$b, c("x", "y"))
 })
 
@@ -62,10 +62,10 @@ test_that("py_result_to_df converts NULL values to NA", {
 
 # --- read_project_config() ---
 
-test_that("read_project_config returns empty list when file missing", {
+test_that("read_project_config returns empty nested lists when file missing", {
   withr::local_dir(withr::local_tempdir())
   result <- sqlfluffr:::read_project_config()
-  expect_equal(result, list())
+  expect_equal(result, list(sqlfluff = list(), sqlfluffr = list()))
 })
 
 test_that("read_project_config reads settings and ignores other sections", {
@@ -84,13 +84,82 @@ test_that("read_project_config reads settings and ignores other sections", {
   ), ".sqlfluff")
 
   result <- sqlfluffr:::read_project_config()
-  expect_equal(result[["dialect"]], "postgres")
-  expect_equal(result[["max_line_length"]], "120")
-  expect_equal(result[["glue"]], "true")
-  expect_null(result[["enabled"]])
+  expect_equal(result$sqlfluff[["dialect"]], "postgres")
+  expect_equal(result$sqlfluff[["max_line_length"]], "120")
+  expect_equal(result$sqlfluffr[["glue"]], "true")
+  expect_null(result$sqlfluff[["enabled"]])
+  expect_null(result$sqlfluffr[["enabled"]])
+})
+
+test_that("read_project_config keeps keys separate per section", {
+  dir <- withr::local_tempdir()
+  withr::local_dir(dir)
+  writeLines(c(
+    "[sqlfluff]",
+    "dialect = postgres",
+    "",
+    "[sqlfluffr]",
+    "dialect = override"
+  ), ".sqlfluff")
+
+  result <- sqlfluffr:::read_project_config()
+  expect_equal(result$sqlfluff[["dialect"]], "postgres")
+  expect_equal(result$sqlfluffr[["dialect"]], "override")
+})
+
+# --- input validation ---
+
+test_that("check_scalar_string rejects non-string input", {
+  expect_error(
+    sqlfluffr:::check_scalar_string(123, "dialect"),
+    "single string"
+  )
+  expect_error(
+    sqlfluffr:::check_scalar_string(c("a", "b"), "dialect"),
+    "single string"
+  )
+})
+
+test_that("check_scalar_string accepts NULL and single string", {
+  expect_silent(sqlfluffr:::check_scalar_string(NULL, "dialect"))
+  expect_silent(sqlfluffr:::check_scalar_string("ansi", "dialect"))
+})
+
+test_that("check_character_or_null rejects non-character input", {
+  expect_error(
+    sqlfluffr:::check_character_or_null(123, "rules"),
+    "character vector"
+  )
+})
+
+test_that("check_character_or_null accepts NULL and character vectors", {
+  expect_silent(sqlfluffr:::check_character_or_null(NULL, "rules"))
+  expect_silent(sqlfluffr:::check_character_or_null(c("LT01", "LT02"), "rules"))
 })
 
 # --- resolve_config() ---
+
+test_that("resolve_config validates dialect type", {
+  withr::local_dir(withr::local_tempdir())
+  expect_error(
+    sqlfluffr:::resolve_config(
+      dialect = 123, rules = NULL, exclude_rules = NULL,
+      config = NULL, glue = NULL, sql = "SELECT 1"
+    ),
+    "single string"
+  )
+})
+
+test_that("resolve_config validates rules type", {
+  withr::local_dir(withr::local_tempdir())
+  expect_error(
+    sqlfluffr:::resolve_config(
+      dialect = NULL, rules = 123, exclude_rules = NULL,
+      config = NULL, glue = NULL, sql = "SELECT 1"
+    ),
+    "character vector"
+  )
+})
 
 test_that("resolve_config returns NULL when no settings provided", {
   withr::local_dir(withr::local_tempdir())

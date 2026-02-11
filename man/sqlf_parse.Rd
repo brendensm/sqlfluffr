@@ -16,7 +16,9 @@ sqlf_parse(sql = NULL, file = NULL, dialect = NULL, config = NULL, glue = NULL)
 \item{config}{A [sqlf_config()] object.}
 
 \item{glue}{If `TRUE`, treat `\{var\}` placeholders as `glue::glue_sql`
-variables before parsing.}
+variables before parsing. `NULL` (the default) reads the `glue` setting
+from the project `.sqlfluff` config file; `FALSE` explicitly disables
+glue handling regardless of project config.}
 }
 \value{
 A nested list representing the parse tree.
