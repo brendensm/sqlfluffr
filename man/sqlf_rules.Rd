@@ -13,9 +13,7 @@ A data.frame with columns `code` and `description`.
 Returns the rules available in the installed version of sqlfluff.
 }
 \examples{
-\dontrun{
-# Requires Python package 'sqlfluff'
+\dontshow{if (reticulate::py_module_available("sqlfluff")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 sqlf_rules()
-}
-
+\dontshow{\}) # examplesIf}
 }

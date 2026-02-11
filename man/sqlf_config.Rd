@@ -46,16 +46,9 @@ discovers. Once written, [sqlf_lint()], [sqlf_fix()], and [sqlf_parse()]
 will use these settings without needing explicit arguments.
 }
 \examples{
-\dontrun{
-# Set up Teradata dialect with glue support for the project
-sqlf_config(dialect = "teradata", glue = TRUE)
-
-# Now lint and fix calls use Teradata + glue automatically
-sqlf_lint(file = "query.sql")
-sqlf_fix(file = "query.sql")
-
-# Edit the config file manually in RStudio
-sqlf_config_edit()
-}
+path <- tempfile(fileext = ".sqlfluff")
+sqlf_config(dialect = "postgres", path = path)
+readLines(path)
+unlink(path)
 
 }

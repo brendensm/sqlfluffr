@@ -9,6 +9,9 @@ sqlf_config_edit(path = ".sqlfluff")
 \arguments{
 \item{path}{Path to the configuration file. Defaults to `".sqlfluff"`.}
 }
+\value{
+The file path, invisibly.
+}
 \description{
 Opens the `.sqlfluff` configuration file in the default editor.
 In RStudio, this opens the file in the source pane.

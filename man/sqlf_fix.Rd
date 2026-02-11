@@ -65,10 +65,7 @@ causes include:
 }
 
 \examples{
-\dontrun{
-# Requires Python package 'sqlfluff'
+\dontshow{if (reticulate::py_module_available("sqlfluff")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
-sqlf_fix(file = "query.sql", overwrite = TRUE)
-}
-
+\dontshow{\}) # examplesIf}
 }
