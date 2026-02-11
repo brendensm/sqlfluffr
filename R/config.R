@@ -36,17 +36,10 @@ new_sqlf_config <- function(dialect = NULL, rules = NULL,
 #' @returns The file path, invisibly.
 #'
 #' @examples
-#' \dontrun{
-#' # Set up Teradata dialect with glue support for the project
-#' sqlf_config(dialect = "teradata", glue = TRUE)
-#'
-#' # Now lint and fix calls use Teradata + glue automatically
-#' sqlf_lint(file = "query.sql")
-#' sqlf_fix(file = "query.sql")
-#'
-#' # Edit the config file manually in RStudio
-#' sqlf_config_edit()
-#' }
+#' path <- tempfile(fileext = ".sqlfluff")
+#' sqlf_config(dialect = "postgres", path = path)
+#' readLines(path)
+#' unlink(path)
 #'
 #' @export
 sqlf_config <- function(dialect = NULL, rules = NULL,
@@ -93,6 +86,8 @@ sqlf_config <- function(dialect = NULL, rules = NULL,
 #' In RStudio, this opens the file in the source pane.
 #'
 #' @param path Path to the configuration file. Defaults to `".sqlfluff"`.
+#'
+#' @returns The file path, invisibly.
 #'
 #' @export
 sqlf_config_edit <- function(path = ".sqlfluff") {

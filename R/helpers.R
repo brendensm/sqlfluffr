@@ -4,11 +4,8 @@
 #'
 #' @returns A data.frame with columns `label`, `name`, and `inherits_from`.
 #'
-#' @examples
-#' \dontrun{
-#' # Requires Python package 'sqlfluff'
+#' @examplesIf reticulate::py_module_available("sqlfluff")
 #' sqlf_dialects()
-#' }
 #'
 #' @export
 sqlf_dialects <- function() {
@@ -23,11 +20,8 @@ sqlf_dialects <- function() {
 #'
 #' @returns A data.frame with columns `code` and `description`.
 #'
-#' @examples
-#' \dontrun{
-#' # Requires Python package 'sqlfluff'
+#' @examplesIf reticulate::py_module_available("sqlfluff")
 #' sqlf_rules()
-#' }
 #'
 #' @export
 sqlf_rules <- function() {

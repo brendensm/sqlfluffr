@@ -11,11 +11,8 @@
 #'
 #' @returns A nested list representing the parse tree.
 #'
-#' @examples
-#' \dontrun{
-#' # Requires Python package 'sqlfluff'
+#' @examplesIf reticulate::py_module_available("sqlfluff")
 #' sqlf_parse(sql = "SELECT 1\n")
-#' }
 #'
 #' @export
 sqlf_parse <- function(sql = NULL, file = NULL, dialect = NULL,
