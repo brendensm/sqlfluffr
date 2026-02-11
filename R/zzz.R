@@ -20,8 +20,11 @@ quietly <- function(expr) {
 }
 
 #' @noRd
+is_interactive <- function() interactive()
+
+#' @noRd
 prompt_install <- function() {
-  if (!interactive()) {
+  if (!is_interactive()) {
     stop(
       "The Python package 'sqlfluff' is not installed.\n",
       "Run sqlfluffr in an interactive session to install.",
