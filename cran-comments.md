@@ -2,7 +2,7 @@
 
 0 errors | 0 warnings | 1 notes
 
-* This is a new release.
+* This is a new submission.
 
 ## Package notes
 
