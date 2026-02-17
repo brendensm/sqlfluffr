@@ -20,7 +20,7 @@ Depends:
     R (>= 4.0)
 Imports:
     reticulate
-SystemRequirements: Python (>= 3.0), sqlfluff (https://sqlfluff.com)
+SystemRequirements: Python (>= 3.9), sqlfluff (https://sqlfluff.com)
 Suggests:
     testthat (>= 3.2.0),
     glue,
