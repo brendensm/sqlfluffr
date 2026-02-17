@@ -15,7 +15,7 @@ function will re-prompt for Python and sqlfluff installation. Use this
 if your Python environment has changed or something is not working.
 }
 \examples{
-\dontrun{
+\dontrun{ # Resets cached install marker
 sqlf_reset()
 }
 

@@ -16,3 +16,9 @@ The file path, invisibly.
 Opens the `.sqlfluff` configuration file in the default editor.
 In RStudio, this opens the file in the source pane.
 }
+\examples{
+\dontrun{ # interactive option to edit config file
+sqlf_config_edit()
+}
+
+}
