@@ -33,7 +33,7 @@ prompt_install <- function() {
   }
 
   message("The Python package 'sqlfluff' is required.")
-  message("This may download Python and dependencies (~25 MB).")
+  message("This may download Python and dependencies (~50 MB).")
 
   answer <- utils::menu(
     choices = c("Yes", "No"),
