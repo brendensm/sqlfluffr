@@ -60,7 +60,7 @@ prompt_install <- function() {
 #' @returns Invisible `NULL`.
 #'
 #' @examples
-#' \dontrun{
+#' \dontrun{ # Resets cached install marker
 #' sqlf_reset()
 #' }
 #'

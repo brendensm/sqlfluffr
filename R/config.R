@@ -103,6 +103,11 @@ sqlf_config <- function(dialect = NULL, rules = NULL,
 #'
 #' @param path Path to the configuration file. Defaults to `".sqlfluff"`.
 #'
+#' @examples
+#' \dontrun{ # interactive option to edit config file
+#' sqlf_config_edit()
+#' }
+#'
 #' @returns The file path, invisibly.
 #'
 #' @export
