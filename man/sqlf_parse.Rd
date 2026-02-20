@@ -27,7 +27,7 @@ A nested list representing the parse tree.
 Parses a SQL string or file into a syntax tree using sqlfluff.
 }
 \examples{
-\dontshow{if (reticulate::py_module_available("sqlfluff")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (reticulate::virtualenv_exists("r-sqlfluffr")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 sqlf_parse(sql = "SELECT 1\n")
 \dontshow{\}) # examplesIf}
 }

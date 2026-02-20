@@ -67,7 +67,7 @@ causes include:
 }
 
 \examples{
-\dontshow{if (reticulate::py_module_available("sqlfluff")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (reticulate::virtualenv_exists("r-sqlfluffr")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
 \dontshow{\}) # examplesIf}
 }

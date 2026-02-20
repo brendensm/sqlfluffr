@@ -12,7 +12,14 @@
 remotes::install_github("brendensm/sqlfluffr")
 ```
 
-Python and sqlfluff are managed via [reticulate](https://rstudio.github.io/reticulate/). On first use of a function, you'll be prompted to install any missing dependencies.
+Then run the one-time Python setup:
+
+```r
+library(sqlfluffr)
+sqlf_install()
+```
+
+This creates a dedicated virtual environment and installs Python and sqlfluff via [reticulate](https://rstudio.github.io/reticulate/). You only need to run `sqlf_install()` once.
 
 ## Basic usage
 

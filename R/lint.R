@@ -18,7 +18,7 @@
 #'   `line_no`, `line_pos`, `code`, `description`, and `name`.
 #'   Returns a zero-row data.frame if there are no violations.
 #'
-#' @examplesIf reticulate::py_module_available("sqlfluff")
+#' @examplesIf reticulate::virtualenv_exists("r-sqlfluffr")
 #' sqlf_lint(sql = "SELECT  a,b from t where x=1\n")
 #' sqlf_lint(sql = "SELECT TOP 10 * FROM t\n", dialect = "tsql")
 #'

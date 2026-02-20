@@ -1,27 +1,12 @@
-describe("prompt_install()", {
-  it("errors in non-interactive sessions", {
+describe("ensure_sqlfluff()", {
+  it("errors when virtualenv does not exist", {
     local_mocked_bindings(
-      is_interactive = function() FALSE,
-      .package = "sqlfluffr"
+      virtualenv_exists = function(...) FALSE,
+      .package = "reticulate"
     )
     expect_error(
-      sqlfluffr:::prompt_install(),
-      "interactive session"
-    )
-  })
-
-  it("errors when user declines installation", {
-    local_mocked_bindings(
-      is_interactive = function() TRUE,
-      .package = "sqlfluffr"
-    )
-    local_mocked_bindings(
-      menu = function(...) 2L,
-      .package = "utils"
-    )
-    expect_error(
-      sqlfluffr:::prompt_install(),
-      "cancelled"
+      sqlfluffr:::ensure_sqlfluff(),
+      "sqlf_install"
     )
   })
 })

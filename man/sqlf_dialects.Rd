@@ -13,7 +13,7 @@ A data.frame with columns `label`, `name`, and `inherits_from`.
 Returns the dialects supported by the installed version of sqlfluff.
 }
 \examples{
-\dontshow{if (reticulate::py_module_available("sqlfluff")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (reticulate::virtualenv_exists("r-sqlfluffr")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 sqlf_dialects()
 \dontshow{\}) # examplesIf}
 }

@@ -13,7 +13,7 @@
 #'
 #' @returns A nested list representing the parse tree.
 #'
-#' @examplesIf reticulate::py_module_available("sqlfluff")
+#' @examplesIf reticulate::virtualenv_exists("r-sqlfluffr")
 #' sqlf_parse(sql = "SELECT 1\n")
 #'
 #' @export

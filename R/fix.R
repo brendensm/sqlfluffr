@@ -58,7 +58,7 @@ check_parse_errors <- function(sql_text, fluff_config, glue) {
 #'
 #' @returns The fixed SQL string (invisibly when printed via `cat`).
 #'
-#' @examplesIf reticulate::py_module_available("sqlfluff")
+#' @examplesIf reticulate::virtualenv_exists("r-sqlfluffr")
 #' sqlf_fix(sql = "SELECT  a,b from t where x=1\n")
 #'
 #' @section Common parsing issues:

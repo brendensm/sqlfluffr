@@ -1,5 +1,7 @@
 .sqlfluff_env <- new.env(parent = emptyenv())
 
+VENV_NAME <- "r-sqlfluffr"
+
 #' @noRd
 quietly <- function(expr) {
   suppressWarnings(suppressMessages(force(expr)))
@@ -9,39 +11,19 @@ quietly <- function(expr) {
 is_interactive <- function() interactive()
 
 #' @noRd
-prompt_install <- function() {
-  if (!is_interactive()) {
-    stop(
-      "The Python package 'sqlfluff' is not installed.\n",
-      "Run sqlfluffr in an interactive session to install.",
-      call. = FALSE
-    )
+ensure_sqlfluff <- function() {
+  if (!reticulate::virtualenv_exists(VENV_NAME)) {
+    stop("sqlfluff is not installed. Run sqlf_install() to set up.", call. = FALSE)
   }
 
-  message("The Python package 'sqlfluff' is required.")
-  message("This may download Python and dependencies (~50 MB).")
-
-  answer <- utils::menu(
-    choices = c("Yes", "No"),
-    title = "Would you like to install it?"
-  )
-
-  if (answer != 1L) {
-    stop("sqlfluff installation cancelled.", call. = FALSE)
-  }
-
-  quietly(reticulate::py_require("sqlfluff"))
+  reticulate::use_virtualenv(VENV_NAME, required = TRUE)
 }
 
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
-    sf <- try(quietly(reticulate::import("sqlfluff")), silent = TRUE)
-    if (inherits(sf, "try-error")) {
-      prompt_install()
-      sf <- quietly(reticulate::import("sqlfluff"))
-    }
-    .sqlfluff_env$sqlfluff <- sf
+    ensure_sqlfluff()
+    .sqlfluff_env$sqlfluff <- quietly(reticulate::import("sqlfluff"))
   }
   .sqlfluff_env$sqlfluff
 }
