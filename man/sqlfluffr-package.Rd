@@ -4,9 +4,9 @@
 \name{sqlfluffr-package}
 \alias{sqlfluffr}
 \alias{sqlfluffr-package}
-\title{sqlfluffr: Wrapper to the SQL Linter and Formatter 'sqlfluff'}
+\title{sqlfluffr: Wrapper to the 'SQL' Linter and Formatter 'sqlfluff'}
 \description{
-An R interface to the 'Python' 'sqlfluff' SQL linter and formatter via the 'reticulate' package. Enables linting, fixing, and parsing of SQL queries with support for multiple dialects. 'Python' and 'sqlfluff' are automatically provisioned on first use with user consent. Includes special handling for 'glue' SQL syntax with curly-brace placeholders.
+An R interface to the 'Python' 'sqlfluff' 'SQL' linter and formatter via the 'reticulate' package. Enables linting, fixing, and parsing of 'SQL' queries with support for multiple dialects. 'Python' and 'sqlfluff' are automatically provisioned on first use with user consent. Includes special handling for 'glue' 'SQL' syntax with curly-brace placeholders.
 }
 \seealso{
 Useful links:
