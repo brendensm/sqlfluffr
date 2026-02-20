@@ -1,15 +1,5 @@
 .sqlfluff_env <- new.env(parent = emptyenv())
 
-.onLoad <- function(libname, pkgname) {
-  sf <- try(quietly({
-    reticulate::py_require("sqlfluff")
-    reticulate::import("sqlfluff")
-  }), silent = TRUE)
-  if (!inherits(sf, "try-error")) {
-    .sqlfluff_env$sqlfluff <- sf
-  }
-}
-
 #' @noRd
 quietly <- function(expr) {
   suppressWarnings(suppressMessages(force(expr)))
@@ -46,10 +36,7 @@ prompt_install <- function() {
 #' @noRd
 get_sqlfluff <- function() {
   if (is.null(.sqlfluff_env$sqlfluff)) {
-    sf <- try(quietly({
-      reticulate::py_require("sqlfluff")
-      reticulate::import("sqlfluff")
-    }), silent = TRUE)
+    sf <- try(quietly(reticulate::import("sqlfluff")), silent = TRUE)
     if (inherits(sf, "try-error")) {
       prompt_install()
       sf <- quietly(reticulate::import("sqlfluff"))
