@@ -1,12 +1,21 @@
 # sqlfluffr
 
 <!-- badges: start -->
+  [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/sqlfluffr)](https://cran.r-project.org/package=sqlfluffr)
   [![R-CMD-check](https://github.com/brendensm/sqlfluffr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brendensm/sqlfluffr/actions/workflows/R-CMD-check.yaml)
   <!-- badges: end -->
 
 **sqlfluffr** is an R wrapper around [SQLFluff](https://github.com/sqlfluff/sqlfluff), the popular SQL linter and formatter. Lint, fix, and parse SQL directly from R with support for multiple dialects and [`glue::glue_sql()`](https://glue.tidyverse.org/reference/glue_sql.html) syntax.
 
 ## Installation
+
+Install from CRAN:
+
+```r
+install.packages("sqlfluffr")
+```
+
+Or from GitHub:
 
 ```r
 remotes::install_github("brendensm/sqlfluffr")
